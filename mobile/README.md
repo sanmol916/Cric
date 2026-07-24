@@ -157,7 +157,13 @@ mobile/
                               LiveScoring, Scorecard, History, Settings
 ```
 
+## ℹ️ Expo SDK version
+This project targets **Expo SDK 54** (React Native 0.81, React 19.1) so it opens
+in the **App Store version of Expo Go** (the App Store build of Expo Go trails
+the very latest SDK, so SDK 57 projects show an "incompatible / requires a newer
+Expo Go" error on a physical iPhone).
+
 ## ✅ Verified
-- `npm run typecheck` (tsc) — passes.
-- `npx expo-doctor` — 20/20 checks pass.
-- `npx expo export` — Metro bundles all 954 modules with no errors.
+- `npm run typecheck` (tsc) — passes (0 errors).
+- `npx expo-doctor` — 18/18 checks pass.
+- `npx expo export` — Metro bundles the app with no errors.
