@@ -139,3 +139,16 @@ src/
   wide is not a legal ball and not faced by the striker; byes/leg-byes are not
   charged to the bowler; run-outs don’t credit the bowler). You can always edit
   a ball before approving, so edge cases are easy to correct.
+
+
+---
+
+## 📱 Native mobile app (iOS & Android)
+
+A full React Native (Expo) version of this app — with onboarding slides, OTP /
+Google / Email login, a full menu, native voice scoring, history and settings —
+lives in the [`mobile/`](./mobile) folder. It is ready to build and publish to
+the App Store and Google Play.
+
+See [`mobile/README.md`](./mobile/README.md) for how to run it and the full
+publishing guide.
