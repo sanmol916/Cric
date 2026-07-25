@@ -8,7 +8,9 @@ import type { InningsSummary, MatchState, Team } from '../types';
 import { useMatch } from '../store/matchStore';
 import { computeInnings } from '../scoring';
 import { BattingCard, BowlingCard } from '../components/ScorecardTables';
-import { Card, CardTitle } from '../components/ui';
+import { Avatar } from '../components/Avatar';
+import { Button, Card, CardTitle } from '../components/ui';
+import { shareScorecard } from '../lib/share';
 import { colors, font, spacing } from '../theme';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Scorecard'>;
@@ -48,6 +50,14 @@ export function ScorecardScreen({ route }: Props) {
             </Card>
           ) : null}
 
+          <Button
+            title="Share scorecard"
+            icon="📤"
+            variant="ghost"
+            onPress={() => shareScorecard(match)}
+            style={{ marginBottom: spacing.lg }}
+          />
+
           {[s0, s1].map((s, i) =>
             innaHasData(s) || i === match.currentInningsIndex ? (
               <View key={i} style={{ marginBottom: spacing.xl }}>
@@ -77,7 +87,10 @@ function InningsHeader({
     <Card style={styles.header}>
       <CardTitle>{`Innings ${index + 1}`}</CardTitle>
       <View style={styles.headerRow}>
-        <Text style={styles.headerTeam}>{team?.name ?? 'Team'}</Text>
+        <View style={styles.headerTeamRow}>
+          <Avatar name={team?.name ?? 'Team'} uri={team?.logoUri} size={36} kind="team" />
+          <Text style={styles.headerTeam}>{team?.name ?? 'Team'}</Text>
+        </View>
         <Text style={styles.headerScore}>
           {summary.totalRuns}/{summary.wickets}
           <Text style={styles.headerOvers}> ({summary.oversText})</Text>
@@ -93,8 +106,9 @@ const styles = StyleSheet.create({
   trophy: { fontSize: 40, marginBottom: 6 },
   result: { color: colors.text0, fontSize: 18, fontWeight: '800', textAlign: 'center' },
   header: { marginBottom: spacing.md },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
-  headerTeam: { color: colors.text1, fontSize: 15, fontWeight: '600' },
+  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  headerTeamRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flex: 1 },
+  headerTeam: { color: colors.text1, fontSize: 15, fontWeight: '600', flexShrink: 1 },
   headerScore: { color: colors.text0, fontSize: 24, fontWeight: '800', fontFamily: font.mono },
   headerOvers: { color: colors.text2, fontSize: 14 },
 });

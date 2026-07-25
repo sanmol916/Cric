@@ -167,3 +167,25 @@ Expo Go" error on a physical iPhone).
 - `npm run typecheck` (tsc) — passes (0 errors).
 - `npx expo-doctor` — 18/18 checks pass.
 - `npx expo export` — Metro bundles the app with no errors.
+
+
+---
+
+## ✨ Product features (v1.1)
+
+- **Multi-step team creation** wizard: upload a **team logo** and **player
+  photos**, or let the app auto-generate colourful **initials avatars** when no
+  image is added. Set a short code (e.g. "RCB") and choose overs with quick presets.
+- **Avatars everywhere**: scoreboard, batting/bowling cards, history and home
+  all show team logos and player pictures.
+- **Share scorecard**: tap **Share** on the scorecard to send a formatted
+  summary (teams, result, top scorers) to anyone via WhatsApp, email, etc.
+- **Premium theme** consistent across onboarding, login and the full menu.
+
+> **Changing images (app icon, starting logo, etc.):** see
+> [`CHANGING_IMAGES.md`](./CHANGING_IMAGES.md).
+
+> **Sharing with another logged-in user *inside* the app** (real account-to-account
+> sync) needs a backend — connect the free Firebase project (see the Firebase
+> section above) and it can be enabled. The OS share sheet works today with no
+> backend.

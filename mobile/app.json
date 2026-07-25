@@ -40,6 +40,22 @@
           "speechRecognitionPermission": "VoiceScore uses speech recognition to score matches."
         }
       ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "VoiceScore lets you pick a team logo or player photo from your library.",
+          "cameraPermission": "VoiceScore lets you take a team logo or player photo with the camera."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0a0a0c"
+        }
+      ],
       "expo-web-browser"
     ]
   }

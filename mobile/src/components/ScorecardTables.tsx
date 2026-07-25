@@ -2,12 +2,21 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import type { InningsSummary, MatchState } from '../types';
 import { Card, CardTitle } from './ui';
+import { Avatar } from './Avatar';
 import { ballsToOvers } from '../scoring';
 import { colors, font, spacing } from '../theme';
 
 interface Props {
   summary: InningsSummary;
   state: MatchState;
+}
+
+function photoOf(state: MatchState, playerId: string): string | undefined {
+  for (const t of state.teams) {
+    const p = t.players.find((pl) => pl.id === playerId);
+    if (p) return p.photoUri;
+  }
+  return undefined;
 }
 
 export function BattingCard({ summary, state }: Props) {
@@ -22,26 +31,39 @@ export function BattingCard({ summary, state }: Props) {
   return (
     <Card>
       <CardTitle>Batting</CardTitle>
-      <Row header cols={['Batter', 'R', 'B', '4s', '6s', 'SR']} />
+      <View style={styles.headerRow}>
+        <Text style={[styles.h, styles.nameCol]}>Batter</Text>
+        <Text style={[styles.h, styles.numCol]}>R</Text>
+        <Text style={[styles.h, styles.numCol]}>B</Text>
+        <Text style={[styles.h, styles.numCol]}>4s</Text>
+        <Text style={[styles.h, styles.numCol]}>6s</Text>
+        <Text style={[styles.h, styles.srCol]}>SR</Text>
+      </View>
       {batters.length === 0 ? (
         <Text style={styles.empty}>No batters yet</Text>
       ) : (
         batters.map((b) => {
           const onStrike = b.playerId === state.strikerId && !b.isOut;
           return (
-            <View key={b.playerId}>
-              <Row
-                active={onStrike}
-                cols={[
-                  `${b.name}${onStrike ? ' *' : ''}`,
-                  String(b.runs),
-                  String(b.balls),
-                  String(b.fours),
-                  String(b.sixes),
-                  b.strikeRate.toFixed(0),
-                ]}
-              />
-              {b.isOut && b.dismissal ? <Text style={styles.dismissal}>{b.dismissal}</Text> : null}
+            <View key={b.playerId} style={[styles.row, onStrike && styles.rowActive]}>
+              <View style={[styles.nameCol, styles.nameWrap]}>
+                <Avatar name={b.name} uri={photoOf(state, b.playerId)} size={30} kind="player" ring={onStrike} />
+                <View style={{ flex: 1 }}>
+                  <Text style={[styles.name, onStrike && { color: colors.redBright }]} numberOfLines={1}>
+                    {b.name}
+                    {onStrike ? ' *' : ''}
+                  </Text>
+                  {b.isOut && b.dismissal ? <Text style={styles.dismissal}>{b.dismissal}</Text> : null}
+                  {!b.isOut && (b.playerId === state.strikerId || b.playerId === state.nonStrikerId) ? (
+                    <Text style={styles.notout}>not out</Text>
+                  ) : null}
+                </View>
+              </View>
+              <Text style={[styles.num, styles.numCol]}>{b.runs}</Text>
+              <Text style={[styles.num, styles.numCol]}>{b.balls}</Text>
+              <Text style={[styles.num, styles.numCol]}>{b.fours}</Text>
+              <Text style={[styles.num, styles.numCol]}>{b.sixes}</Text>
+              <Text style={[styles.num, styles.srCol]}>{b.strikeRate.toFixed(0)}</Text>
             </View>
           );
         })
@@ -55,81 +77,69 @@ export function BowlingCard({ summary, state }: Props) {
   return (
     <Card style={{ marginTop: spacing.lg }}>
       <CardTitle>Bowling</CardTitle>
-      <Row header cols={['Bowler', 'O', 'R', 'W', 'Econ']} widths={[3, 1, 1, 1, 1.4]} />
+      <View style={styles.headerRow}>
+        <Text style={[styles.h, styles.nameCol]}>Bowler</Text>
+        <Text style={[styles.h, styles.numCol]}>O</Text>
+        <Text style={[styles.h, styles.numCol]}>R</Text>
+        <Text style={[styles.h, styles.numCol]}>W</Text>
+        <Text style={[styles.h, styles.srCol]}>Econ</Text>
+      </View>
       {bowlers.length === 0 ? (
         <Text style={styles.empty}>No bowlers yet</Text>
       ) : (
-        bowlers.map((b) => (
-          <Row
-            key={b.playerId}
-            active={b.playerId === state.bowlerId}
-            widths={[3, 1, 1, 1, 1.4]}
-            cols={[
-              `${b.name}${b.playerId === state.bowlerId ? ' *' : ''}`,
-              ballsToOvers(b.legalBalls),
-              String(b.runsConceded),
-              String(b.wickets),
-              b.economy.toFixed(1),
-            ]}
-          />
-        ))
+        bowlers.map((b) => {
+          const bowling = b.playerId === state.bowlerId;
+          return (
+            <View key={b.playerId} style={[styles.row, bowling && styles.rowActive]}>
+              <View style={[styles.nameCol, styles.nameWrap]}>
+                <Avatar name={b.name} uri={photoOf(state, b.playerId)} size={30} kind="player" ring={bowling} />
+                <Text style={[styles.name, bowling && { color: colors.redBright }]} numberOfLines={1}>
+                  {b.name}
+                  {bowling ? ' *' : ''}
+                </Text>
+              </View>
+              <Text style={[styles.num, styles.numCol]}>{ballsToOvers(b.legalBalls)}</Text>
+              <Text style={[styles.num, styles.numCol]}>{b.runsConceded}</Text>
+              <Text style={[styles.num, styles.numCol]}>{b.wickets}</Text>
+              <Text style={[styles.num, styles.srCol]}>{b.economy.toFixed(1)}</Text>
+            </View>
+          );
+        })
       )}
     </Card>
   );
 }
 
-function Row({
-  cols,
-  header,
-  active,
-  widths,
-}: {
-  cols: string[];
-  header?: boolean;
-  active?: boolean;
-  widths?: number[];
-}) {
-  const flexes = widths ?? [3, 1, 1, 1, 1, 1.2];
-  return (
-    <View style={[styles.row, active && styles.rowActive]}>
-      {cols.map((c, i) => (
-        <Text
-          key={i}
-          style={[
-            styles.cell,
-            { flex: flexes[i] ?? 1, textAlign: i === 0 ? 'left' : 'right' },
-            i === 0 ? styles.nameCell : styles.numCell,
-            header && styles.headerCell,
-            active && i === 0 && { color: colors.redBright },
-          ]}
-        >
-          {c}
-        </Text>
-      ))}
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  row: {
+  headerRow: {
     flexDirection: 'row',
-    paddingVertical: 8,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.bg3,
     alignItems: 'center',
+    paddingBottom: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
   },
-  rowActive: { backgroundColor: 'rgba(225,29,42,0.06)' },
-  cell: { fontSize: 13 },
-  nameCell: { color: colors.text0, fontWeight: '600' },
-  numCell: { color: colors.text1, fontFamily: font.mono },
-  headerCell: {
+  h: {
     color: colors.text3,
     fontSize: 11,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
     fontWeight: '700',
-    fontFamily: 'System',
   },
-  dismissal: { color: colors.text3, fontSize: 11, marginTop: -2, marginBottom: 4 },
-  empty: { color: colors.text2, paddingVertical: 8, fontSize: 13 },
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.bg3,
+  },
+  rowActive: { backgroundColor: 'rgba(225,29,42,0.06)', borderRadius: 8 },
+  nameCol: { flex: 3.4 },
+  numCol: { flex: 1, textAlign: 'right' },
+  srCol: { flex: 1.3, textAlign: 'right' },
+  nameWrap: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingRight: 6 },
+  name: { color: colors.text0, fontWeight: '600', fontSize: 14 },
+  num: { color: colors.text1, fontFamily: font.mono, fontSize: 13 },
+  dismissal: { color: colors.text3, fontSize: 11 },
+  notout: { color: colors.text2, fontSize: 11 },
+  empty: { color: colors.text2, paddingVertical: 10, fontSize: 13 },
 });

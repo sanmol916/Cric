@@ -9,6 +9,7 @@ import type { MatchState } from '../types';
 import { loadHistory } from '../store/matchStore';
 import { computeInnings } from '../scoring';
 import { Card, CardTitle } from '../components/ui';
+import { Avatar } from '../components/Avatar';
 import { colors, font, spacing } from '../theme';
 
 export function HistoryScreen() {
@@ -46,13 +47,19 @@ export function HistoryScreen() {
                 >
                   <Card style={{ marginBottom: spacing.md }}>
                     <View style={styles.row}>
-                      <Text style={styles.team}>{m.teams[0].name}</Text>
+                      <View style={styles.teamCell}>
+                        <Avatar name={m.teams[0].name} uri={m.teams[0].logoUri} size={30} kind="team" />
+                        <Text style={styles.team} numberOfLines={1}>{m.teams[0].name}</Text>
+                      </View>
                       <Text style={styles.score}>
                         {s0.totalRuns}/{s0.wickets}
                       </Text>
                     </View>
                     <View style={styles.row}>
-                      <Text style={styles.team}>{m.teams[1].name}</Text>
+                      <View style={styles.teamCell}>
+                        <Avatar name={m.teams[1].name} uri={m.teams[1].logoUri} size={30} kind="team" />
+                        <Text style={styles.team} numberOfLines={1}>{m.teams[1].name}</Text>
+                      </View>
                       <Text style={styles.score}>
                         {s1.totalRuns}/{s1.wickets}
                       </Text>
@@ -74,8 +81,9 @@ export function HistoryScreen() {
 const styles = StyleSheet.create({
   scroll: { padding: spacing.lg, paddingBottom: spacing.xxl },
   title: { color: colors.text0, fontSize: 22, fontWeight: '800', marginBottom: spacing.lg },
-  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 4 },
-  team: { color: colors.text1, fontSize: 15, fontWeight: '600' },
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 5 },
+  teamCell: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flex: 1, marginRight: spacing.sm },
+  team: { color: colors.text1, fontSize: 15, fontWeight: '600', flexShrink: 1 },
   score: { color: colors.text0, fontSize: 18, fontWeight: '800', fontFamily: font.mono },
   date: { color: colors.text3, fontSize: 12, marginTop: 6 },
 });

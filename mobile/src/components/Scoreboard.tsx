@@ -3,6 +3,7 @@ import { StyleSheet, Text, View } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import type { InningsSummary, MatchState, Team } from '../types';
 import { Badge } from './ui';
+import { Avatar } from './Avatar';
 import { colors, font, radius, spacing } from '../theme';
 
 interface Props {
@@ -30,7 +31,10 @@ export function Scoreboard({ state, summary, battingTeam }: Props) {
       style={styles.board}
     >
       <View style={styles.topRow}>
-        <Text style={styles.team}>{battingTeam.name.toUpperCase()}</Text>
+        <View style={styles.teamRow}>
+          <Avatar name={battingTeam.name} uri={battingTeam.logoUri} size={34} kind="team" />
+          <Text style={styles.team} numberOfLines={1}>{battingTeam.name.toUpperCase()}</Text>
+        </View>
         <Badge
           label={state.status === 'complete' ? 'Match over' : `LIVE · Inn ${state.currentInningsIndex + 1}`}
           live={state.status !== 'complete'}
@@ -77,7 +81,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   topRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  team: { color: colors.text1, fontWeight: '700', letterSpacing: 1, fontSize: 13 },
+  teamRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, flex: 1, marginRight: spacing.sm },
+  team: { color: colors.text1, fontWeight: '700', letterSpacing: 1, fontSize: 13, flexShrink: 1 },
   score: { color: colors.text0, fontSize: 52, fontWeight: '800', fontFamily: font.mono, marginTop: 6 },
   wkts: { color: colors.text2, fontSize: 28 },
   meta: { flexDirection: 'row', gap: spacing.xl, marginTop: spacing.md },

@@ -10,6 +10,7 @@ import { useMatch } from '../store/matchStore';
 import { useAuth } from '../store/AuthContext';
 import { computeInnings } from '../scoring';
 import { Button, Card, CardTitle } from '../components/ui';
+import { Avatar } from '../components/Avatar';
 import { colors, radius, spacing } from '../theme';
 
 type Props = CompositeScreenProps<
@@ -52,7 +53,10 @@ export function HomeScreen({ navigation }: Props) {
           {liveSummary && battingTeam ? (
             <Card style={styles.resumeCard}>
               <CardTitle>Match in progress</CardTitle>
-              <Text style={styles.resumeTeam}>{battingTeam.name}</Text>
+              <View style={styles.resumeTeamRow}>
+                <Avatar name={battingTeam.name} uri={battingTeam.logoUri} size={32} kind="team" />
+                <Text style={styles.resumeTeam}>{battingTeam.name}</Text>
+              </View>
               <Text style={styles.resumeScore}>
                 {liveSummary.totalRuns}/{liveSummary.wickets}
                 <Text style={styles.resumeOvers}> ({liveSummary.oversText} ov)</Text>
@@ -136,6 +140,7 @@ const styles = StyleSheet.create({
   brand: { color: colors.text0, fontSize: 22, fontWeight: '800', marginTop: 2 },
   logo: { width: 48, height: 48, borderRadius: 14, alignItems: 'center', justifyContent: 'center' },
   resumeCard: { borderColor: colors.redDim },
+  resumeTeamRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
   resumeTeam: { color: colors.text1, fontWeight: '600', fontSize: 14 },
   resumeScore: { color: colors.text0, fontSize: 34, fontWeight: '800', marginTop: 2 },
   resumeOvers: { color: colors.text2, fontSize: 16, fontWeight: '600' },

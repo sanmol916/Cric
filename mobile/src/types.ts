@@ -7,11 +7,17 @@ export type TeamId = string;
 export interface Player {
   id: PlayerId;
   name: string;
+  /** Optional local URI to a player photo; falls back to a generated avatar. */
+  photoUri?: string;
 }
 
 export interface Team {
   id: TeamId;
   name: string;
+  /** Optional 3-4 letter code shown on compact scoreboards, e.g. "RCB". */
+  shortName?: string;
+  /** Optional local URI to a team logo; falls back to a generated avatar. */
+  logoUri?: string;
   players: Player[];
 }
 
