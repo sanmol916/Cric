@@ -1,0 +1,62 @@
+{
+  "expo": {
+    "name": "VoiceScore Cricket",
+    "slug": "voicescore-cricket",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "voicescore",
+    "userInterfaceStyle": "dark",
+    "backgroundColor": "#0a0a0c",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sanmol916.voicescore",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "VoiceScore uses the microphone so you can score each ball by speaking.",
+        "NSSpeechRecognitionUsageDescription": "VoiceScore uses speech recognition to turn what you say into cricket scoring."
+      }
+    },
+    "android": {
+      "package": "com.sanmol916.voicescore",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#0a0a0c",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": ["RECORD_AUDIO"],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "@react-native-voice/voice",
+        {
+          "microphonePermission": "VoiceScore uses the microphone so you can score by voice.",
+          "speechRecognitionPermission": "VoiceScore uses speech recognition to score matches."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "VoiceScore lets you pick a team logo or player photo from your library.",
+          "cameraPermission": "VoiceScore lets you take a team logo or player photo with the camera."
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#0a0a0c"
+        }
+      ],
+      "expo-web-browser"
+    ]
+  }
+}
